@@ -7,7 +7,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
-//var promRouter =  require
+var promRouter =  require('./routes/promotions');
+var leadRouter = require('./routes/leaders');
 
 
 
@@ -18,6 +19,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use('/dishes',dishRouter);
+app.use('/leaders',leadRouter);
+app.use('/promotions',promRouter);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
