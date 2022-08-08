@@ -400,7 +400,7 @@ dishRouter.route('/:dishId/comments/:commentId')
     
     }, (err) => {
 
-        eerr = new Error('Dishes/dish'+req.params.dishId+' not found');
+        err = new Error('Dishes/dish'+req.params.dishId+' not found');
         err.status = 404;
         return next(err);
 
