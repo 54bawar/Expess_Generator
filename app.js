@@ -17,6 +17,8 @@ var promRouter = require('./routes/promotions');
 var leadRouter = require('./routes/leaders');
 
 var dishes = require('./models/dishes');
+var promotions = require ('./models/promotions');
+var leaders = require('./models/leaders');
 
 const url='mongodb://localhost:27017/conFusion';
 

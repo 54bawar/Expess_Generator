@@ -1,52 +1,161 @@
 const express=require('express');
 const bodyParser = require ('body-parser');
-
+const mongoose = require('mongoose');
+const Leaders = require('../models/leaders');
 const leadRouter = express.Router();
 
 leadRouter.route('/')
-.all((req,res,next)=>{
-    res.statusCode=200;
-    res.setHeader('Content-Type','application/json');
-    next();
-})
-.get((req,res,next)=>{
-    res.end('GET request for leaders');
+.get((req, res, next) => {
+    Leaders.find({})
+
+    .then((leader) => {
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(leader);
+
+    }, (err) => {
+        next(err);
+    })
+    .catch((err) => {
+        next(err);
+    });
 })
 
-.post((req,res,next)=>{
-    res.end("POST for leaders");
+.post((req, res, next) => {
+    Leaders.create(req.body)
+    .then((leader) => {
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(leader);
+
+    }, (err) => {
+        next(err);
+    })
+    .catch((err) => {
+        next(err);
+    });
 })
 
-.put((req,res,next)=>{
-    res.end('PUT not Supported on '+'leaders');
+.put((req, res, next) => {
+    
+    res.statusCode=403;
+    res.end('Put not supported on Leaders');
+
 })
 
-.delete((req,res,next)=>{
-    res.end('Delete all the leaders');
+.delete((req, res, next) => {
+    Leaders.deleteMany({})
+    .then((leader) => {
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(leader);
+
+    }, (err) => {
+        next(err);
+    })
+    .catch((err) => {
+        next(err);
+    });
 });
 
-//routes within parameters dishId
+
+//FOR DISHID-----------------------------------
+
 leadRouter.route('/:leaderId')
-.all((req,res,next)=>{
-   // removeEventListener.statusCode = 200;
-    res.setHeader('Content-Type','application/json');
-    next();
-})
-.get((req,res,next)=>{
-    res.end('Get for leader id: '+req.params.leaderId);
+.get((req, res, next) => {
+    Leaders.findById(req.params.leaderId)
+    .then((leader) => {
+        
+        if(leader==null)
+        {
+            err = new Error('Leader ' + req.params.leaderId + ' not found');
+            err.status=404;
+            return next(err);
+        }
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(leader);
+
+    }, (err) => {
+
+        err = new Error('Leader ' + req.params.leaderId + ' not found');
+        err.status =404;
+        return next(err);
+
+    })
+    .catch((err) => {
+
+        next(err);
+
+    });
 })
 
-.post((req,res,next)=>{
-    res.end('Post not supported on leaders/leaderID');
+.post((req, res, next) => {
+    
+    res.statusCode=403;
+    res.end('Post not supported on Leaders/'+req.params.leaderID);
+
 })
 
-.put((req,res,next)=>{
-    res.end('Updating the leader with leaderID: '+req.params.leaderId);
+.put((req, res, next) => {
+    Leaders.findByIdAndUpdate(req.params.leaderId,{ $set: req.body }, { new: true })
+    .then((leader) => {
+
+        if(leader==null)
+        {
+            err = new Error('Leader ' + req.params.leaderId + ' not found');
+            err.status=404;
+            return next(err);
+        }
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(leader);
+
+    }, (err) => {
+
+        err = new Error('Leader ' + req.params.leaderId + ' not found');
+        err.status=404;
+        return next(err);
+    })
+    .catch((err) => {
+
+        next(err);
+
+    });
 })
 
-.delete((req,res,next)=>{
-    res.end('Deleting leader with ID: '+req.params.leaderId);
+.delete((req, res, next) => {
+    Leaders.findByIdAndDelete(req.params.leaderId)
+    .then((leader) => {
+        
+        if(leader==null)
+        {
+            err = new Error('Leader ' + req.params.leaderId + ' not found');
+            err.status=404;
+            return next(err);
+
+        }
+        res.statusCode=200;
+        res.setHeader('Content-Type','application/json');
+        res.json(leader);
+
+    }, (err) =>{
+
+        err = new Error('Leader ' + req.params.leaderId + ' not found');
+        err.status=404;
+        return next(err);
+
+    })
+    .catch((err)=>{
+
+        next(err);
+
+    });
 });
-
 
 module.exports = leadRouter;
