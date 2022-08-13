@@ -28,6 +28,8 @@ const LeaderSchema = new Schema({
         type: Boolean,
         default:false
     }
+},{
+    timestamps: true
 });
 
 const Leaders = mongoose.model('Leader', LeaderSchema);
