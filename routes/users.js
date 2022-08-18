@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/users');
 var passport = require('passport');
 
-var User = require('../models/users');
+var authenticate = require('../authenticate');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -28,11 +29,15 @@ router.post('/signup',(req,res,next)=>{
 })
 
 router.post('/login',passport.authenticate('local'),(req,res,next)=>{
-    res.statusCode=200;
-    res.setHeader('Content-Type','application/json');
-    res.json({
-      success:true,
-      status:'Yopu are successfully logged in'
+
+  var token = authenticate.getToken({_id:req.user._id});
+
+  res.statusCode=200;
+  res.setHeader('Content-Type','application/json');
+  res.json({
+    success:true,
+    token:token,
+    status:'Yopu are successfully logged in'
     });
 })
 
