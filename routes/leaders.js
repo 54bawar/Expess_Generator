@@ -3,6 +3,7 @@ const bodyParser = require ('body-parser');
 const mongoose = require('mongoose');
 const Leaders = require('../models/leaders');
 const leadRouter = express.Router();
+const authenticate = require('../authenticate');
 
 leadRouter.route('/')
 .get((req, res, next) => {
