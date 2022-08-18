@@ -22,7 +22,7 @@ leadRouter.route('/')
     });
 })
 
-.post((req, res, next) => {
+.post(authenticate.verifyUser , (req, res, next) => {
     Leaders.create(req.body)
     .then((leader) => {
 
@@ -38,14 +38,14 @@ leadRouter.route('/')
     });
 })
 
-.put((req, res, next) => {
+.put(authenticate.verifyUser , (req, res, next) => {
     
     res.statusCode=403;
     res.end('Put not supported on Leaders');
 
 })
 
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser , (req, res, next) => {
     Leaders.deleteMany({})
     .then((leader) => {
 
@@ -94,14 +94,14 @@ leadRouter.route('/:leaderId')
     });
 })
 
-.post((req, res, next) => {
+.post(authenticate.verifyUser , (req, res, next) => {
     
     res.statusCode=403;
     res.end('Post not supported on Leaders/'+req.params.leaderID);
 
 })
 
-.put((req, res, next) => {
+.put(authenticate.verifyUser , (req, res, next) => {
     Leaders.findByIdAndUpdate(req.params.leaderId,{ $set: req.body }, { new: true })
     .then((leader) => {
 
@@ -129,7 +129,7 @@ leadRouter.route('/:leaderId')
     });
 })
 
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser , (req, res, next) => {
     Leaders.findByIdAndDelete(req.params.leaderId)
     .then((leader) => {
         

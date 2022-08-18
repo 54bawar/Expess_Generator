@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const Promotions = require('../models/promotions');
 const promRouter = express.Router();
 
+const authenticate = require('../authenticate');
+
 promRouter.route('/')
 .get((req, res, next) => {
     Promotions.find({})
@@ -22,7 +24,7 @@ promRouter.route('/')
     });
 })
 
-.post((req, res, next) => {
+.post(authenticate.verifyUser, (req, res, next) => {
     Promotions.create(req.body)
     .then((promotion) => {
 
@@ -38,14 +40,14 @@ promRouter.route('/')
     });
 })
 
-.put((req, res, next) => {
+.put(authenticate.verifyUser , (req, res, next) => {
     
     res.statusCode=403;
     res.end('Put not supported on Promotions');
 
 })
 
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser , (req, res, next) => {
     Promotions.deleteMany({})
     .then((promotion) => {
 
@@ -92,14 +94,14 @@ promRouter.route('/:promotionId')
     });
 })
 
-.post((req, res, next) => {
+.post(authenticate.verifyUser , (req, res, next) => {
     
     res.statusCode=403;
     res.end('Post not supported on Promotions/'+req.params.promotionID);
 
 })
 
-.put((req, res, next) => {
+.put(authenticate.verifyUser , (req, res, next) => {
     Promotions.findByIdAndUpdate(req.params.promotionId,{ $set: req.body }, { new: true })
     .then((promotion) => {
 
@@ -127,7 +129,7 @@ promRouter.route('/:promotionId')
     });
 })
 
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser , (req, res, next) => {
     Promotions.findByIdAndDelete(req.params.promotionId)
     .then((promotion) => {
         
